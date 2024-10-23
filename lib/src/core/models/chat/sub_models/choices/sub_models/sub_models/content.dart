@@ -9,10 +9,8 @@ class OpenAIChatCompletionChoiceMessageContentItemModel {
   /// The text content of the item.
   final String? text;
 
-  /// The image url object.
-  final Map<String, dynamic>? imageUrl;
-
-  final String? imageBase64;
+  /// The image url content of the item.
+  final Map<String, String>? imageUrl;
 
   @override
   int get hashCode => type.hashCode ^ text.hashCode ^ imageUrl.hashCode;
@@ -22,7 +20,6 @@ class OpenAIChatCompletionChoiceMessageContentItemModel {
     required this.type,
     this.text,
     this.imageUrl,
-    this.imageBase64,
   });
 
   /// This is used to convert a [Map<String, dynamic>] object to a [OpenAIChatCompletionChoiceMessageContentItemModel] object.
@@ -32,8 +29,7 @@ class OpenAIChatCompletionChoiceMessageContentItemModel {
     return OpenAIChatCompletionChoiceMessageContentItemModel._(
       type: asMap['type'],
       text: asMap['text'],
-      imageUrl: asMap['image_url'],
-      imageBase64: asMap['imageBase64'],
+      imageUrl: asMap['image_url'] != null ? {"url": asMap['image_url']} : null,
     );
   }
 
@@ -51,16 +47,7 @@ class OpenAIChatCompletionChoiceMessageContentItemModel {
   ) {
     return OpenAIChatCompletionChoiceMessageContentItemModel._(
       type: 'image_url',
-      imageUrl: {'url': imageUrl},
-    );
-  }
-
-  factory OpenAIChatCompletionChoiceMessageContentItemModel.imageBase64(
-    String imageBase64,
-  ) {
-    return OpenAIChatCompletionChoiceMessageContentItemModel._(
-      type: 'image_base64',
-      imageBase64: imageBase64,
+      imageUrl: {"url": imageUrl},
     );
   }
 
@@ -70,8 +57,6 @@ class OpenAIChatCompletionChoiceMessageContentItemModel {
       "type": type,
       if (text != null) "text": text,
       if (imageUrl != null) "image_url": imageUrl,
-      if (imageBase64 != null)
-        "image_url": {"url": "data:image/jpeg;base64,${imageBase64}"}
     };
   }
 
@@ -83,18 +68,15 @@ class OpenAIChatCompletionChoiceMessageContentItemModel {
 
     return other.type == type &&
         other.text == text &&
-        other.imageUrl == imageUrl &&
-        other.imageBase64 == imageBase64;
+        other.imageUrl == imageUrl;
   }
 
   @override
   String toString() => switch (type) {
         'text' =>
           'OpenAIChatCompletionChoiceMessageContentItemModel(type: $type, text: $text)',
-        'image' =>
+        'image_url' =>
           'OpenAIChatCompletionChoiceMessageContentItemModel(type: $type, imageUrl: $imageUrl)',
-        'image_base64' =>
-          'OpenAIChatCompletionChoiceMessageContentItemModel(type: $type, imageBase64: $imageBase64)',
         _ => 'OpenAIChatCompletionChoiceMessageContentItemModel(type: $type)',
       };
 }
